@@ -1,0 +1,67 @@
+server:
+  shutdown: graceful
+
+gateway:
+  server:
+    port: ${GW_SERVER_PORT:38955}
+  backdoor:
+    port: ${GW_BKD_SERVER_PORT:38960}
+  connection:
+    maxInactiveTime: ${GW_SESSION_INACTIVE:240000}
+  pendingCommands:
+    timeToRetry: ${GW_COMMANDS_TIME_TO_RETRY:5000}
+
+messaging:
+  deviceCreate:
+    exchange: device.managing.tx
+    queue: gateway.device.created.gnc.queue
+    routingKey: created
+  deviceDelete:
+    exchange: device.managing.tx
+    queue: gateway.device.deleted.gnc.queue
+    routingKey: deleted
+  deviceLogin:
+    exchange: device.managing.tx
+    routingKey: logged
+  deviceLogout:
+    exchange: device.managing.tx
+    routingKey: disconnected
+  deviceReport:
+    exchange: device.managing.tx
+    routingKey: info
+  deviceCommand:
+    exchange: device.managing.tx
+    queue: ${HOSTNAME:gateway}.device.command.adc.queue
+    routingKey: command
+  deviceResponse:
+    exchange: device.managing.tx
+    routingKey: response
+  vehicleAssign:
+    exchange: vehicle.managing.tx
+    queue: gateway.vehicle.assigned.gnc.queue
+    routingKey: assigned
+  vehicleUnassign:
+    exchange: vehicle.managing.tx
+    queue: gateway.vehicle.unassigned.gnc.queue
+    routingKey: unassigned
+  vehicleLogin:
+    exchange: vehicle.managing.tx
+    routingKey: logged
+  vehicleLogout:
+    exchange: vehicle.managing.tx
+    routingKey: disconnected
+  vehicleReport:
+    exchange: vehicle.reporting.tx
+    routingKey: info
+  vehicleCommand:
+    exchange: vehicle.command.tx
+    queue: ${HOSTNAME:gateway}.vehicle.command.adc.queue
+    routingKey: command
+  vehicleResponse:
+    exchange: vehicle.command.tx
+    routingKey: response
+
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: "20s"
+

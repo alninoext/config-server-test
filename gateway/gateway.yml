@@ -1,0 +1,88 @@
+app:
+  groupid: '@project.groupId@'
+  artifactd: '@project.artifactId@'
+  version: '@project.version@'
+
+gateway:
+  server:
+    port: ${GW_SERVER_PORT:38955}
+  backdoor:
+    port: ${GW_BKD_SERVER_PORT:38960}
+  connection:
+    maxInactiveTime: ${GW_SESSION_INACTIVE:120000}
+  pendingCommands:
+    timeToRetry: ${GW_COMMANDS_TIME_TO_RETRY:5000}
+
+messaging:
+  deviceCreate:
+    exchange: device.managing.tx
+    queue: gateway.device.created.queue
+    routingKey: created
+  deviceDelete:
+    exchange: device.managing.tx
+    queue: gateway.device.deleted.queue
+    routingKey: deleted
+  deviceLogin:
+    exchange: device.managing.tx
+    routingKey: logged
+  deviceLogout:
+    exchange: device.managing.tx
+    routingKey: disconnected
+  deviceReport:
+    exchange: device.managing.tx
+    routingKey: info
+  deviceCommand:
+    exchange: device.managing.tx
+    queue: ${HOSTNAME:gateway}.device.command.queue
+    routingKey: command
+  deviceResponse:
+    exchange: device.managing.tx
+    routingKey: response
+  vehicleAssign:
+    exchange: vehicle.managing.tx
+    queue: gateway.vehicle.assigned.queue
+    routingKey: assigned
+  vehicleUnassign:
+    exchange: vehicle.managing.tx
+    queue: gateway.vehicle.unassigned.queue
+    routingKey: unassigned
+  vehicleConnection:
+    exchange: vehicle.managing.tx
+    routingKey: connected
+  vehicleLogin:
+    exchange: vehicle.managing.tx
+    routingKey: logged
+  vehicleLogout:
+    exchange: vehicle.managing.tx
+    routingKey: disconnected
+  vehicleReport:
+    exchange: vehicle.reporting.tx
+    routingKey: info
+  vehicleCommand:
+    exchange: vehicle.command.tx
+    queue: ${HOSTNAME:gateway}.vehicle.command.queue
+    routingKey: command
+  vehicleResponse:
+    exchange: vehicle.command.tx
+    routingKey: response
+
+spring:
+  banner:
+    # generated at http://patorjk.com/software/taag/#p=display&f=Big&t=Gateway
+    location: classpath:banner/gateway.txt
+  flyway:
+    enabled: true
+    baselineOnMigrate: true
+    placeholders:
+      user: ${GW_DB_USERNAME:services}
+  datasource:
+    url: ${GW_DB_URL:jdbc:postgresql://localhost:5432/gateway}
+    username: ${GW_DB_USERNAME:services}
+    password: ${GW_DB_PASSWORD:services}
+  rabbitmq:
+    host: ${GW_MSG_HOST:localhost}
+    port: ${GW_MSG_PORT:5672}
+    username: ${GW_MSG_USERNAME:admin}
+    password: ${GW_MSG_PASSWORD:admin}
+    virtual-host: /
+
